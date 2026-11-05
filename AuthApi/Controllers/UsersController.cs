@@ -72,5 +72,54 @@ namespace AuthApi.Controllers
             return StatusCode(400, new { message = "NEMJÓ" });
         }
 
+        [HttpPut("Update")]
+
+        public async Task<IActionResult> UpdateUsers([FromQuery] Guid id, [FromBody] UpdateUserDTO updateuserdto)
+        {
+            var users = await _context.Users.FirstOrDefaultAsync(u => u.Id==id);
+
+            if (users is null)
+            {
+                return StatusCode(404, new { message = "NINCS" });
+
+            }
+            else if (users is not null)
+            {
+                users.Name=updateuserdto.Name;
+                users.Email=updateuserdto.Email;
+                users.Password=updateuserdto.Password;
+
+                _context.Users.Update(users);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, new { message = "FRISS", result = users });
+            }
+            return StatusCode(400, new { message = "NEMJÓ" });
+        }
+
+        [HttpDelete("DeleteUser")]
+
+        public async Task<IActionResult> DeleteUser([FromQuery] Guid id)
+        {
+            var users = await _context.Users.FindAsync(id);
+
+            if (users is null)
+            {
+                return StatusCode(404, new { message = "NINCS" });
+
+            }
+            else if (users is not null)
+            {
+               
+                _context.Users.Remove(users);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, new { message = "TÖRÖLVE", result = users });
+            }
+            return StatusCode(400, new { message = "NEMJÓ" });
+        }
+
+
+
     }
 }
