@@ -1,4 +1,6 @@
 
+using AuthApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 namespace AuthApi
@@ -8,6 +10,8 @@ namespace AuthApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<AuthUsersContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("Mysql")));
 
             // Add services to the container.
 
